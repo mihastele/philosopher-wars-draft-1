@@ -8,6 +8,24 @@ public partial class Philosopher : Node2D
 	[Export]
 	public string PhilosopherName { get; set; } = "Nietzsche";
 	
+	//public string Name { get; set; }
+	//public string Specialty { get; set; }
+	//public int Points { get; set; }
+	//public List<Card> Cards { get; set; }
+	
+	//public Philosopher(string name, string specialty)
+	//{
+		//Name = name;
+		//Specialty = specialty;
+		//Points = 0;
+		//Cards = new List<Card>();
+	//}
+
+	public void PlayCard(Card chosenCard)
+	{
+		GD.Print($"{Name} plays {chosenCard.Name} ({chosenCard.Type})");
+	}
+	
 	// Dictionary mapping philosopher names to their Texture2D image resources.
 	private Dictionary<string, Texture2D> philosopherTextures = new Dictionary<string, Texture2D>();
 
