@@ -18,16 +18,13 @@ public partial class Philosopher : Node2D
 	}
 	
 	// Dictionary mapping philosopher names to their Texture2D image resources.
-	private Dictionary<string, Texture2D> philosopherTextures = new Dictionary<string, Texture2D>();
+	private Dictionary<string, Texture2D> philosopherTextures = GlobalState.philosopherTextures;
 
 	public override void _Ready()
 	{
 		// Load the images into the dictionary.
 		// Ensure these paths correspond to where your image files are stored.
-		philosopherTextures["Nietzsche"] = GD.Load<Texture2D>("res://philosophers/Nietzsche.png");
-		philosopherTextures["Descartes"] = GD.Load<Texture2D>("res://philosophers/Descartes.png");
-		philosopherTextures["Kant"] = GD.Load<Texture2D>("res://philosophers/Kant.png");
-		philosopherTextures["Socrates"] = GD.Load<Texture2D>("res://philosophers/Socrates.png");
+		
 
 		// Check if the selected philosopher exists in our dictionary.
 		if (philosopherTextures.ContainsKey(PhilosopherName))

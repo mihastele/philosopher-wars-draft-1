@@ -11,17 +11,12 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 	[Export] public Button ConfirmButton;
 
 	// Dictionary storing philosopher images
-	private Dictionary<string, Texture2D> philosopherTextures = new Dictionary<string, Texture2D>();
+	private System.Collections.Generic.Dictionary<string, Texture2D> philosopherTextures = GlobalState.philosopherTextures;
 	[Export] private Godot.Collections.Array<TextureRect> philosopherRects;
 
 
 	public override void _Ready()
 	{
-		// Load philosopher images
-		philosopherTextures["Nietzsche"] = GD.Load<Texture2D>("res://philosophers/Nietzsche.png");
-		philosopherTextures["Descartes"] = GD.Load<Texture2D>("res://philosophers/Descartes.png");
-		philosopherTextures["Kant"] = GD.Load<Texture2D>("res://philosophers/Kant.png");
-		philosopherTextures["Socrates"] = GD.Load<Texture2D>("res://philosophers/Socrates.png");
 
 		var philosopherNames = new[] { "Socrates", "Nietzsche", "Kant", "Descartes" };
 		for (int i = 0; i < philosopherRects.Count; i++)

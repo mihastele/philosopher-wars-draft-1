@@ -29,7 +29,7 @@ public partial class Game : Node2D
 
 	// Container node in which philosopher nodes will be dynamically instanced.
 	[Export]
-	public Node2D PhilosophersContainer;
+	public HBoxContainer PhilosophersContainer;
 
 	// Keep track of the instantiated philosopher nodes.
 	private List<Philosopher> _philosopherNodes = new List<Philosopher>();
@@ -57,6 +57,13 @@ public partial class Game : Node2D
 	{
 		// Load the philosopher scene (ensure the path matches your project files)
 		PackedScene philosopherScene = GD.Load<PackedScene>("res://scenes/Philosopher.tscn");
+		
+		// Get the viewport size to calculate top right corner
+		Vector2 viewportSize = GetViewport().GetVisibleRect().Size;
+		
+		// Load the player texture sprite
+		Sprite2D player = GetNode<Sprite2D>("Player"); // Adjust the path if needed
+
 
 		var philosopherData = new List<(string name, Vector2 pos, string bias)>
 		{
@@ -66,16 +73,47 @@ public partial class Game : Node2D
 			("Socrates",  new Vector2(700, 300), "Dialogue")
 		};
 
+		// Find the selected philosopher from GlobalState
+		string selectedPhilosopherName = GlobalState.SelectedPhilosopher;
+
 		foreach (var data in philosopherData)
 		{
 			Philosopher philosopherNode = (Philosopher)philosopherScene.Instantiate();
 			philosopherNode.PhilosopherName = data.name;
-			philosopherNode.Position = data.pos;
-			// Set each philosopher’s bias that will be used when they serve as judge.
+
+			// // Position the selected philosopher in the top right corner
+			// if (data.name == selectedPhilosopherName)
+			// {
+			// 	philosopherNode.Position = new Vector2(viewportSize.X - 100, 100); // Adjusted for some padding
+			// }
+			// else
+			// {
+			// 	philosopherNode.Position = data.pos;
+			// }
+			
+			// Position the selected philosopher in the top right corner
+			if (data.name == selectedPhilosopherName)
+			{
+				// philosopherNode.Position = new Vector2(viewportSize.X - 100, 100); // Adjusted for some padding
+				
+				// Set the texture for the player texture sprite
+				if (player != null)
+				{
+					player.Texture = GlobalState.philosopherTextures[selectedPhilosopherName];
+				}
+
+			}
+			else
+			{
+				PhilosophersContainer.AddChild(philosopherNode);
+			}
+
+			// Set each philosopher's bias that will be used when they serve as judge.
 			philosopherNode.Bias = data.bias;
-			PhilosophersContainer.AddChild(philosopherNode);
+			
 			_philosopherNodes.Add(philosopherNode);
 		}
+
 	}
 
 	private void StartRound()

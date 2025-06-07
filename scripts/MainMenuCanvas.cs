@@ -10,6 +10,7 @@ public partial class MainMenuCanvas : CanvasLayer
 	{
 		StartButton.Pressed += OnStartPressed;
 		ExitButton.Pressed += OnExitPressed;
+		GlobalState.initPhilosopherTexturesDictionary();
 	}
 
 	private void OnStartPressed()
