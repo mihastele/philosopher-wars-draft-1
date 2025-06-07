@@ -29,7 +29,7 @@ public partial class Game : Node2D
 
 	// Container node in which philosopher nodes will be dynamically instanced.
 	[Export]
-	public HBoxContainer PhilosophersContainer;
+	public Node2D PhilosophersContainer;
 
 	// Keep track of the instantiated philosopher nodes.
 	private List<Philosopher> _philosopherNodes = new List<Philosopher>();
@@ -61,8 +61,8 @@ public partial class Game : Node2D
 		// Get the viewport size to calculate top right corner
 		Vector2 viewportSize = GetViewport().GetVisibleRect().Size;
 		
-		// Load the player texture sprite
-		Sprite2D player = GetNode<Sprite2D>("Player"); // Adjust the path if needed
+		// // Load the player texture sprite
+		// Sprite2D player = GetNode<Sprite2D>("Player"); // Adjust the path if needed
 
 
 		var philosopherData = new List<(string name, Vector2 pos, string bias)>
@@ -80,37 +80,21 @@ public partial class Game : Node2D
 		{
 			Philosopher philosopherNode = (Philosopher)philosopherScene.Instantiate();
 			philosopherNode.PhilosopherName = data.name;
-
-			// // Position the selected philosopher in the top right corner
-			// if (data.name == selectedPhilosopherName)
-			// {
-			// 	philosopherNode.Position = new Vector2(viewportSize.X - 100, 100); // Adjusted for some padding
-			// }
-			// else
-			// {
-			// 	philosopherNode.Position = data.pos;
-			// }
 			
 			// Position the selected philosopher in the top right corner
 			if (data.name == selectedPhilosopherName)
 			{
-				// philosopherNode.Position = new Vector2(viewportSize.X - 100, 100); // Adjusted for some padding
-				
-				// Set the texture for the player texture sprite
-				if (player != null)
-				{
-					player.Texture = GlobalState.philosopherTextures[selectedPhilosopherName];
-				}
-
+				philosopherNode.Position = new Vector2(viewportSize.X - 100, 100); // Adjusted for some padding
 			}
 			else
 			{
-				PhilosophersContainer.AddChild(philosopherNode);
+				philosopherNode.Position = data.pos;
 			}
-
+			
+			PhilosophersContainer.AddChild(philosopherNode);
+			
 			// Set each philosopher's bias that will be used when they serve as judge.
 			philosopherNode.Bias = data.bias;
-			
 			_philosopherNodes.Add(philosopherNode);
 		}
 
