@@ -79,41 +79,35 @@ public partial class Game : Node2D
 		// float yPosition = 300f; // Fixed Y position
 
 		// Calculate positions dynamically
-		int philosopherCount = philosopherData.Count - 1;
-		float philosopherWidth = 1024f * 0.15f; // 0.15 is the scale factor for the philosopher texture
-		float spacing = 100; // Space between philosophers
+		var nonSelectedPhilosophers = philosopherData.Where(x => x.name != GlobalState.SelectedPhilosopher).ToList();
+		int philosopherCount = nonSelectedPhilosophers.Count;
 
-// Calculate total width of all philosophers and spacing
-		float totalWidth = (philosopherCount * philosopherWidth) + ((philosopherCount - 1) * spacing);
+// Use constants or configuration for magic numbers
+		const float PHILOSOPHER_SCALE = 0.15f;
+		const float VERTICAL_PADDING = 120f;
+		const float HORIZONTAL_SPACING = 100f;
 
-
-// Calculate start X to center horizontally
-		float startX = (viewportSize.X - totalWidth) / 2f;
-
-// Calculate Y position 50 units from the bottom
-		float yPosition = viewportSize.Y - 120f;
-
-
-		// Create a dictionary to store positions
-		Dictionary<string, Vector2> philosopherPositions = new Dictionary<string, Vector2>();
-
-		// Find the selected philosopher from GlobalState
-		string selectedPhilosopherName = GlobalState.SelectedPhilosopher;
-
-		// Calculate positions for each philosopher
-
-		var filteredPhilosophers = philosopherData.Where(x => x.name != selectedPhilosopherName).ToList();
-		// foreach (var philosoperTuple in filteredPhilosophers)
-		// {
-		// GD.Print($"filtered: {philosoperTuple}");
-		// }
-		for (int i = 0; i < filteredPhilosophers.Count; i++)
+		float philosopherWidth = 1024f * PHILOSOPHER_SCALE;
+		float totalWidth = (philosopherCount * philosopherWidth) + ((philosopherCount - 1) * HORIZONTAL_SPACING);
+		
+		var philosopherPositions = new Dictionary<string, Vector2>();
+// Defensive programming: handle zero philosophers case
+		if (philosopherCount > 0)
 		{
-			string name = filteredPhilosophers[i].name;
-			// GD.Print($"name: {name}");
-			philosopherPositions[name] = new Vector2(startX + (i * (spacing + philosopherWidth)), yPosition);
-		}
+			float startX = (viewportSize.X - totalWidth) / 2f + (philosopherWidth / 2f);
+			float yPosition = viewportSize.Y - VERTICAL_PADDING;
 
+			
+	
+			for (int i = 0; i < nonSelectedPhilosophers.Count; i++)
+			{
+				string name = nonSelectedPhilosophers[i].name;
+				philosopherPositions[name] = new Vector2(
+					startX + (i * (HORIZONTAL_SPACING + philosopherWidth)), 
+					yPosition
+				);
+			}
+		}
 
 		foreach (var data in philosopherData)
 		{
@@ -121,7 +115,7 @@ public partial class Game : Node2D
 			philosopherNode.PhilosopherName = data.name;
 
 			// Position the selected philosopher in the top right corner
-			if (data.name == selectedPhilosopherName)
+			if (data.name == GlobalState.SelectedPhilosopher)
 			{
 				philosopherNode.Position = new Vector2(viewportSize.X - 100, 100); // Adjusted for some padding
 			}
