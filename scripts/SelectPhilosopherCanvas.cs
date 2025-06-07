@@ -8,10 +8,10 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 {
 	private string selectedPhilosopher = "";
 
-	[Export] public TextureButton NietzscheButton;
-	[Export] public TextureButton DescartesButton;
-	[Export] public TextureButton KantButton;
-	[Export] public TextureButton SocratesButton;
+	// [Export] public TextureButton NietzscheButton;
+	// [Export] public TextureButton DescartesButton;
+	// [Export] public TextureButton KantButton;
+	// [Export] public TextureButton SocratesButton;
 	[Export] public Button ConfirmButton;
 
 	// Dictionary storing philosopher images
@@ -20,6 +20,13 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 	
 	[Export]
 	private Godot.Collections.Array<TextureRect> philosopherRects;
+	
+	enum hardcodedPhilosopherPositions {
+		Nietzsche = 1,
+		Socrates = 2,
+		Kant = 3,
+		Descartes = 4
+	}
 	
 
 	public override void _Ready()
@@ -68,7 +75,7 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 		var philosopherNames = new[] {"Socrates" , "Nietzsche", "Kant", "Descartes" };
 		for (int i = 0; i < philosopherRects.Count; i++)
 		{
-			var philosopher = philosopherNames[i];
+			string philosopher = philosopherNames[i];
 			var textureRect = philosopherRects[i];	
 			textureRect.StretchMode = TextureRect.StretchModeEnum.KeepCentered;
 			textureRect.Scale = new Vector2(0.15f, 0.15f);
@@ -76,19 +83,22 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 
 			// Add click detection
 			textureRect.MouseFilter = Control.MouseFilterEnum.Pass;
+			
+			// // Capture the philosopher variable in a local copy to avoid closure issues
+			// string capturedPhilosopher = philosopher;
 			textureRect.MouseEntered += () => OnPhilosopherHovered(philosopher);
 			textureRect.MouseExited += () => OnPhilosopherHovered(philosopher);
 			textureRect.GuiInput += (InputEvent @event) => OnPhilosopherSelected(this, philosopher, @event);
 
 			// Add to dictionary and scene
-			philosopherTextureRects[philosopher] = textureRect;
-			AddChild(textureRect);
+			// philosopherTextureRects[philosopher] = textureRect;
+			// AddChild(textureRect);
 
 			// count++;
 		}
 
 		// Position the TextureRects in a grid
-		PositionPhilosophers();
+		// PositionPhilosophers();
 
 		// Connect confirm button
 		ConfirmButton.Pressed += OnConfirmPressed;
@@ -110,16 +120,16 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 	// 	GetTree().ChangeSceneToFile("res://scenes/Game.tscn");
 	// }
 
-	 private void PositionPhilosophers()
-	{
-		var position = new Vector2(100, 100);
-		var spacing = 200;
-
-		philosopherTextureRects["Nietzsche"].Position = position;
-		philosopherTextureRects["Descartes"].Position = position + new Vector2(spacing, 0);
-		philosopherTextureRects["Kant"].Position = position + new Vector2(0, spacing);
-		philosopherTextureRects["Socrates"].Position = position + new Vector2(spacing, spacing);
-	}
+	//  private void PositionPhilosophers()
+	// {
+	// 	var position = new Vector2(100, 100);
+	// 	var spacing = 200;
+	//
+	// 	philosopherTextureRects["Nietzsche"].Position = position;
+	// 	philosopherTextureRects["Descartes"].Position = position + new Vector2(spacing, 0);
+	// 	philosopherTextureRects["Kant"].Position = position + new Vector2(0, spacing);
+	// 	philosopherTextureRects["Socrates"].Position = position + new Vector2(spacing, spacing);
+	// }
 
 	private void OnPhilosopherHovered(string philosopher)
 	{
