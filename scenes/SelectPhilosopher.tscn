@@ -4,13 +4,14 @@
 
 [node name="SelectPhilosopher" type="Node2D"]
 
-[node name="SelectPhilosopherCanvas" type="CanvasLayer" parent="." node_paths=PackedStringArray("NietzscheButton", "DescartesButton", "KantButton", "SocratesButton", "ConfirmButton")]
+[node name="SelectPhilosopherCanvas" type="CanvasLayer" parent="." node_paths=PackedStringArray("NietzscheButton", "DescartesButton", "KantButton", "SocratesButton", "ConfirmButton", "philosopherRects")]
 script = ExtResource("1_gp8is")
 NietzscheButton = NodePath("")
 DescartesButton = NodePath("")
 KantButton = NodePath("")
 SocratesButton = NodePath("")
 ConfirmButton = NodePath("VBoxContainer/ConfirmButton")
+philosopherRects = []
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SelectPhilosopherCanvas"]
 offset_right = 40.0

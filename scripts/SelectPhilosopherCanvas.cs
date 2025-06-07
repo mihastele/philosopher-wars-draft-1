@@ -1,7 +1,8 @@
 using Godot;
 using System;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 using System.Linq;
+using Godot.Collections;
 
 public partial class SelectPhilosopherCanvas : CanvasLayer
 {
@@ -15,7 +16,7 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 
 	// Dictionary storing philosopher images
 	private Dictionary<string, Texture2D> philosopherTextures = new Dictionary<string, Texture2D>();
-	// private Dictionary<string, Sprite2D> philosopherSprites = new Dictionary<string, Sprite2D>();
+	private Dictionary<string, TextureRect> philosopherTextureRects = new Dictionary<string, TextureRect>();
 	
 	[Export]
 	private Godot.Collections.Array<TextureRect> philosopherRects;
@@ -65,40 +66,84 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 		 // Create TextureRects for each philosopher
 		
 		var philosopherNames = new[] {"Socrates" , "Nietzsche", "Kant", "Descartes" };
-        for (int i = 0; i < philosopherRects.Count; i++)
-        {
-            var textureRect = philosopherRects[i];	
-            textureRect.StretchMode = TextureRect.StretchModeEnum.KeepCentered;
-            textureRect.RectScale = new Vector2(0.15f, 0.15f);
-            textureRect.Texture = philosopherTextures[philosopherNames[i]];
+		for (int i = 0; i < philosopherRects.Count; i++)
+		{
+			var philosopher = philosopherNames[i];
+			var textureRect = philosopherRects[i];	
+			textureRect.StretchMode = TextureRect.StretchModeEnum.KeepCentered;
+			textureRect.Scale = new Vector2(0.15f, 0.15f);
+			textureRect.Texture = philosopherTextures[philosopher];
 
-            // Add click detection
-            textureRect.MouseFilter = MouseFilterEnum.Pass;
-            textureRect.Connect("mouse_entered", this, nameof(OnPhilosopherHovered), new[] { philosopher });
-            textureRect.Connect("mouse_exited", this, nameof(OnPhilosopherHovered), new[] { philosopher });
-            textureRect.Connect("mouse_pressed", this, nameof(OnPhilosopherSelected), new[] { philosopher });
+			// Add click detection
+			textureRect.MouseFilter = Control.MouseFilterEnum.Pass;
+			textureRect.MouseEntered += () => OnPhilosopherHovered(philosopher);
+			textureRect.MouseExited += () => OnPhilosopherHovered(philosopher);
+			textureRect.GuiInput += (InputEvent @event) => OnPhilosopherSelected(this, philosopher, @event);
 
-            // Add to dictionary and scene
-            philosopherTextureRects[philosopher] = textureRect;
-            AddChild(textureRect);
+			// Add to dictionary and scene
+			philosopherTextureRects[philosopher] = textureRect;
+			AddChild(textureRect);
 
-            // count++;
-        }
+			// count++;
+		}
 
-        // Position the TextureRects in a grid
-        PositionPhilosophers();
+		// Position the TextureRects in a grid
+		PositionPhilosophers();
 
-        // Connect confirm button
-        ConfirmButton.Pressed += OnConfirmPressed;
+		// Connect confirm button
+		ConfirmButton.Pressed += OnConfirmPressed;
 	}
 
-	private void OnNietzschePressed() { selectedPhilosopher = "Nietzsche"; }
-	private void OnDescartesPressed() { selectedPhilosopher = "Descartes"; }
-	private void OnKantPressed() { selectedPhilosopher = "Kant"; }
-	private void OnSocratesPressed() { selectedPhilosopher = "Socrates"; }
+	// private void OnNietzschePressed() { selectedPhilosopher = "Nietzsche"; }
+	// private void OnDescartesPressed() { selectedPhilosopher = "Descartes"; }
+	// private void OnKantPressed() { selectedPhilosopher = "Kant"; }
+	// private void OnSocratesPressed() { selectedPhilosopher = "Socrates"; }
+
+	// private void OnConfirmPressed()
+	// {
+	// 	// Store selection globally
+	// 	var globalState = GetNode("/root/GlobalState") as GlobalState;
+	// 	globalState.SelectedPhilosopher = selectedPhilosopher;
+	// 	GD.Print($"Selected Philosopher: {selectedPhilosopher}");
+
+	// 	// Transition to the game scene
+	// 	GetTree().ChangeSceneToFile("res://scenes/Game.tscn");
+	// }
+
+	 private void PositionPhilosophers()
+	{
+		var position = new Vector2(100, 100);
+		var spacing = 200;
+
+		philosopherTextureRects["Nietzsche"].Position = position;
+		philosopherTextureRects["Descartes"].Position = position + new Vector2(spacing, 0);
+		philosopherTextureRects["Kant"].Position = position + new Vector2(0, spacing);
+		philosopherTextureRects["Socrates"].Position = position + new Vector2(spacing, spacing);
+	}
+
+	private void OnPhilosopherHovered(string philosopher)
+	{
+		// Add hover effect if needed
+		GD.Print($"Hovered over {philosopher}");
+	}
+
+	private void OnPhilosopherSelected(SelectPhilosopherCanvas canvas, string philosopher, InputEvent @event)
+	{
+		if (@event is InputEventMouseButton mouseEvent && mouseEvent.ButtonIndex == MouseButton.Left && mouseEvent.Pressed)
+		{
+			selectedPhilosopher = philosopher;
+			GD.Print($"Selected: {philosopher}");
+		}
+	}
 
 	private void OnConfirmPressed()
 	{
+		if (string.IsNullOrEmpty(selectedPhilosopher))
+		{
+			GD.Print("No philosopher selected!");
+			return;
+		}
+
 		// Store selection globally
 		var globalState = GetNode("/root/GlobalState") as GlobalState;
 		globalState.SelectedPhilosopher = selectedPhilosopher;
