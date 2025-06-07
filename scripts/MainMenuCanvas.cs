@@ -14,7 +14,7 @@ public partial class MainMenuCanvas : CanvasLayer
 
 	private void OnStartPressed()
 	{
-		GetTree().ChangeSceneToFile("res://SelectPhilosopher.tscn");
+		GetTree().ChangeSceneToFile("res://scenes/SelectPhilosopher.tscn");
 	}
 
 	private void OnExitPressed()

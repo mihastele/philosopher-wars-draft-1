@@ -51,6 +51,6 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 		GD.Print($"Selected Philosopher: {selectedPhilosopher}");
 
 		// Transition to the game scene
-		GetTree().ChangeSceneToFile("res://Game.tscn");
+		GetTree().ChangeSceneToFile("res://scenes/Game.tscn");
 	}
 }

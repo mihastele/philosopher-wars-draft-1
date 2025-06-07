@@ -4,5 +4,21 @@
 
 [node name="MainMenu" type="Node2D"]
 
-[node name="MainMenuCanvas" type="CanvasLayer" parent="."]
+[node name="MainMenuCanvas" type="CanvasLayer" parent="." node_paths=PackedStringArray("StartButton", "ExitButton")]
 script = ExtResource("1_yqorp")
+StartButton = NodePath("VBoxContainer/StartButton")
+ExitButton = NodePath("VBoxContainer/ExitButton")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenuCanvas"]
+offset_right = 1152.0
+offset_bottom = 648.0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="StartButton" type="Button" parent="MainMenuCanvas/VBoxContainer"]
+layout_mode = 2
+text = "START"
+
+[node name="ExitButton" type="Button" parent="MainMenuCanvas/VBoxContainer"]
+layout_mode = 2
+text = "EXIT"

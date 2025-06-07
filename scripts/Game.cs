@@ -56,7 +56,7 @@ public partial class Game : Node2D
 	private void InitPhilosophers()
 	{
 		// Load the philosopher scene (ensure the path matches your project files)
-		PackedScene philosopherScene = GD.Load<PackedScene>("res://Philosopher.tscn");
+		PackedScene philosopherScene = GD.Load<PackedScene>("res://scenes/Philosopher.tscn");
 
 		var philosopherData = new List<(string name, Vector2 pos, string bias)>
 		{
