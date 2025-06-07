@@ -28,6 +28,7 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 		philosopherTextures["Descartes"] = GD.Load<Texture2D>("res://philosophers/Descartes.png");
 		philosopherTextures["Kant"] = GD.Load<Texture2D>("res://philosophers/Kant.png");
 		philosopherTextures["Socrates"] = GD.Load<Texture2D>("res://philosophers/Socrates.png");
+
 		// philosopherSprites["Nietzsche"] = new Sprite2D();
 		// philosopherSprites["Descartes"] = new Sprite2D();
 		// philosopherSprites["Kant"] = new Sprite2D();
@@ -37,29 +38,58 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 		// philosopherSprites["Kant"].Texture = philosopherTextures["Kant"];
 		// philosopherSprites["Socrates"].Texture = philosopherTextures["Socrates"];
 
-		// Assign textures to buttons
-		NietzscheButton.TextureNormal = philosopherTextures["Nietzsche"];
-		DescartesButton.TextureNormal = philosopherTextures["Descartes"];
-		KantButton.TextureNormal = philosopherTextures["Kant"];
-		SocratesButton.TextureNormal = philosopherTextures["Socrates"];
+		//// Assign textures to buttons
+		//NietzscheButton.TextureNormal = philosopherTextures["Nietzsche"];
+		//DescartesButton.TextureNormal = philosopherTextures["Descartes"];
+		//KantButton.TextureNormal = philosopherTextures["Kant"];
+		//SocratesButton.TextureNormal = philosopherTextures["Socrates"];
+//
+		//// Scale the buttons dynamically
+		//NietzscheButton.RectScale = new Vector2(0.15, 0.15);
+		//DescartesButton.RectScale = new Vector2(0.15, 0.15);
+		//KantButton.RectScale = new Vector2(0.15, 0.15);
+		//SocratesButton.RectScale = new Vector2(0.15, 0.15);
+		//// // Scale the TextureRect
+		//// NietzscheButton.TextureNormal.scale = new Vector2(0.15, 0.15);
+		//// DescartesButton.TextureNormal.scale = new Vector2(0.15, 0.15);
+		//// KantButton.TextureNormal.scale = new Vector2(0.15, 0.15);
+		//// SocratesButton.TextureNormal.scale = new Vector2(0.15, 0.15);
 
-		// Scale the buttons dynamically
-		NietzscheButton.RectScale = new Vector2(0.15, 0.15);
-		DescartesButton.RectScale = new Vector2(0.15, 0.15);
-		KantButton.RectScale = new Vector2(0.15, 0.15);
-		SocratesButton.RectScale = new Vector2(0.15, 0.15);
-		// // Scale the TextureRect
-		// NietzscheButton.TextureNormal.scale = new Vector2(0.15, 0.15);
-		// DescartesButton.TextureNormal.scale = new Vector2(0.15, 0.15);
-		// KantButton.TextureNormal.scale = new Vector2(0.15, 0.15);
-		// SocratesButton.TextureNormal.scale = new Vector2(0.15, 0.15);
+		// // Connect button signals
+		// NietzscheButton.Pressed += OnNietzschePressed;
+		// DescartesButton.Pressed += OnDescartesPressed;
+		// KantButton.Pressed += OnKantPressed;
+		// SocratesButton.Pressed += OnSocratesPressed;
+		// ConfirmButton.Pressed += OnConfirmPressed;
 
-		// Connect button signals
-		NietzscheButton.Pressed += OnNietzschePressed;
-		DescartesButton.Pressed += OnDescartesPressed;
-		KantButton.Pressed += OnKantPressed;
-		SocratesButton.Pressed += OnSocratesPressed;
-		ConfirmButton.Pressed += OnConfirmPressed;
+		 // Create TextureRects for each philosopher
+		
+		var philosopherNames = new[] {"Socrates" , "Nietzsche", "Kant", "Descartes" };
+        for (int i = 0; i < philosopherRects.Count; i++)
+        {
+            var textureRect = philosopherRects[i];	
+            textureRect.StretchMode = TextureRect.StretchModeEnum.KeepCentered;
+            textureRect.RectScale = new Vector2(0.15f, 0.15f);
+            textureRect.Texture = philosopherTextures[philosopherNames[i]];
+
+            // Add click detection
+            textureRect.MouseFilter = MouseFilterEnum.Pass;
+            textureRect.Connect("mouse_entered", this, nameof(OnPhilosopherHovered), new[] { philosopher });
+            textureRect.Connect("mouse_exited", this, nameof(OnPhilosopherHovered), new[] { philosopher });
+            textureRect.Connect("mouse_pressed", this, nameof(OnPhilosopherSelected), new[] { philosopher });
+
+            // Add to dictionary and scene
+            philosopherTextureRects[philosopher] = textureRect;
+            AddChild(textureRect);
+
+            // count++;
+        }
+
+        // Position the TextureRects in a grid
+        PositionPhilosophers();
+
+        // Connect confirm button
+        ConfirmButton.Pressed += OnConfirmPressed;
 	}
 
 	private void OnNietzschePressed() { selectedPhilosopher = "Nietzsche"; }
