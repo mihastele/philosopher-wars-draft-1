@@ -6,6 +6,7 @@ public partial class GlobalState : Node
 {
     public static string SelectedPhilosopher = ""; // Use a static variable for easy access
     public static Dictionary<string, Texture2D> philosopherTextures = new Dictionary<string, Texture2D>(); // Create a dictionary to store philosopher textures
+    public static string[] philosopherNames = new[] { "Socrates", "Nietzsche", "Kant", "Descartes" };
 
     public static void initPhilosopherTexturesDictionary()
     {

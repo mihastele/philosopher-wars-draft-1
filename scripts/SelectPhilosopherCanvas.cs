@@ -18,10 +18,10 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 	public override void _Ready()
 	{
 
-		var philosopherNames = new[] { "Socrates", "Nietzsche", "Kant", "Descartes" };
+		
 		for (int i = 0; i < philosopherRects.Count; i++)
 		{
-			string philosopher = philosopherNames[i];
+			string philosopher = GlobalState.philosopherNames[i];
 			var textureRect = philosopherRects[i];
 			textureRect.ExpandMode = TextureRect.ExpandModeEnum.FitWidth;
 			// Set a custom size that's 15% of the original texture size
@@ -56,8 +56,25 @@ public partial class SelectPhilosopherCanvas : CanvasLayer
 		if (@event is InputEventMouseButton mouseEvent && mouseEvent.ButtonIndex == MouseButton.Left &&
 			mouseEvent.Pressed)
 		{
+			// Update the selected philosopher
 			selectedPhilosopher = philosopher;
 			GD.Print($"Selected: {philosopher}");
+		
+			// Reset all philosopher rects to normal appearance
+			foreach (var rect in philosopherRects)
+			{
+				rect.Modulate = new Color(1, 1, 1); // Reset to default color
+				rect.Scale = Vector2.One; // Reset scale
+			}
+		
+			// Highlight the selected philosopher
+			int index = System.Array.IndexOf(GlobalState.philosopherNames, philosopher);
+			if (index >= 0 && index < philosopherRects.Count)
+			{
+				// Apply a highlight effect - you can customize this
+				philosopherRects[index].Modulate = new Color(1.3f, 1.3f, 1.3f); // Slight yellow tint
+				// philosopherRects[index].Scale = new Vector2(1.1f, 1.1f); // Make it slightly larger
+			}
 		}
 	}
 

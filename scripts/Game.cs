@@ -117,7 +117,7 @@ public partial class Game : Node2D
 			// Position the selected philosopher in the top right corner
 			if (data.name == GlobalState.SelectedPhilosopher)
 			{
-				philosopherNode.Position = new Vector2(viewportSize.X - 100, 100); // Adjusted for some padding
+				philosopherNode.Position = new Vector2(viewportSize.X - 100, VERTICAL_PADDING); // Adjusted for some padding
 			}
 			else
 			{
