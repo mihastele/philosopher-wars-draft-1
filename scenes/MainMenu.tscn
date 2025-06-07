@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://duj58k0ffug1c"]
+
+[ext_resource type="Script" uid="uid://b8u1wd6efx4p5" path="res://scripts/MainMenuCanvas.cs" id="1_yqorp"]
+
+[node name="MainMenu" type="Node2D"]
+
+[node name="MainMenuCanvas" type="CanvasLayer" parent="."]
+script = ExtResource("1_yqorp")

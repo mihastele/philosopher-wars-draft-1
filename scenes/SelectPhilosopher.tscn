@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbmhv88oofab"]
+
+[ext_resource type="Script" uid="uid://cciu147u4oag1" path="res://scripts/SelectPhilosopherCanvas.cs" id="1_gp8is"]
+
+[node name="SelectPhilosopher" type="Node2D"]
+
+[node name="SelectPhilosopherCanvas" type="CanvasLayer" parent="."]
+script = ExtResource("1_gp8is")
+
+[node name="Label" type="Label" parent="SelectPhilosopherCanvas"]
+offset_right = 173.0
+offset_bottom = 23.0
+text = "SELECT YOUR FIGHTER"
+
+[node name="NietzscheButton" type="TextureButton" parent="SelectPhilosopherCanvas"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DescartesButton" type="TextureButton" parent="SelectPhilosopherCanvas"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="KantButton" type="TextureButton" parent="SelectPhilosopherCanvas"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SocratesButton" type="TextureButton" parent="SelectPhilosopherCanvas"]
+offset_right = 40.0
+offset_bottom = 40.0
