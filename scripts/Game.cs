@@ -6,9 +6,9 @@ using System.Linq;
 // Simple Card class for simulation.
 public class Card
 {
-	public string Name { get; set; } 
+	public string Name { get; set; }
 	public string Type { get; set; } // Logic, Emotion, etc.
-	public int Effectiveness { get; set; } 
+	public int Effectiveness { get; set; }
 	public string OriginalAuthor { get; set; } // New field for attribution
 
 	public Card(string name, string type, int effectiveness, string originalAuthor)
@@ -24,12 +24,10 @@ public class Card
 public partial class Game : Node2D
 {
 	// Reference to the UI Label that displays the current question.
-	[Export]
-	public Label QuestionLabel;
+	[Export] public Label QuestionLabel;
 
 	// Container node in which philosopher nodes will be dynamically instanced.
-	[Export]
-	public Node2D PhilosophersContainer;
+	[Export] public Node2D PhilosophersContainer;
 
 	// Keep track of the instantiated philosopher nodes.
 	private List<Philosopher> _philosopherNodes = new List<Philosopher>();
@@ -57,30 +55,71 @@ public partial class Game : Node2D
 	{
 		// Load the philosopher scene (ensure the path matches your project files)
 		PackedScene philosopherScene = GD.Load<PackedScene>("res://scenes/Philosopher.tscn");
-		
+
 		// Get the viewport size to calculate top right corner
 		Vector2 viewportSize = GetViewport().GetVisibleRect().Size;
-		
+
 		// // Load the player texture sprite
 		// Sprite2D player = GetNode<Sprite2D>("Player"); // Adjust the path if needed
 
 
-		var philosopherData = new List<(string name, Vector2 pos, string bias)>
+		// Define philosopher data without positions
+		var philosopherData = new List<(string name, string bias)>
 		{
-			("Nietzsche", new Vector2(100, 300), "Emotion"),
-			("Descartes", new Vector2(300, 300), "Logic"),
-			("Kant",      new Vector2(500, 300), "Morality"),
-			("Socrates",  new Vector2(700, 300), "Dialogue")
+			("Nietzsche", "Emotion"),
+			("Descartes", "Logic"),
+			("Kant", "Morality"),
+			("Socrates", "Dialogue")
 		};
+
+		// // Calculate positions dynamically
+		// int philosopherCount = philosopherData.Count;
+		// float spacing = 200f; // Space between philosophers
+		// float startX = 100f; // Start position from left
+		// float yPosition = 300f; // Fixed Y position
+
+		// Calculate positions dynamically
+		int philosopherCount = philosopherData.Count - 1;
+		float philosopherWidth = 1024f * 0.15f; // 0.15 is the scale factor for the philosopher texture
+		float spacing = 100; // Space between philosophers
+
+// Calculate total width of all philosophers and spacing
+		float totalWidth = (philosopherCount * philosopherWidth) + ((philosopherCount - 1) * spacing);
+
+
+// Calculate start X to center horizontally
+		float startX = (viewportSize.X - totalWidth) / 2f;
+
+// Calculate Y position 50 units from the bottom
+		float yPosition = viewportSize.Y - 120f;
+
+
+		// Create a dictionary to store positions
+		Dictionary<string, Vector2> philosopherPositions = new Dictionary<string, Vector2>();
 
 		// Find the selected philosopher from GlobalState
 		string selectedPhilosopherName = GlobalState.SelectedPhilosopher;
+
+		// Calculate positions for each philosopher
+
+		var filteredPhilosophers = philosopherData.Where(x => x.name != selectedPhilosopherName).ToList();
+		// foreach (var philosoperTuple in filteredPhilosophers)
+		// {
+		// GD.Print($"filtered: {philosoperTuple}");
+		// }
+		for (int i = 0; i < filteredPhilosophers.Count; i++)
+		{
+			string name = filteredPhilosophers[i].name;
+			// GD.Print($"name: {name}");
+			philosopherPositions[name] = new Vector2(startX + (i * (spacing + philosopherWidth)), yPosition);
+		}
+
 
 		foreach (var data in philosopherData)
 		{
 			Philosopher philosopherNode = (Philosopher)philosopherScene.Instantiate();
 			philosopherNode.PhilosopherName = data.name;
-			
+
 			// Position the selected philosopher in the top right corner
 			if (data.name == selectedPhilosopherName)
 			{
@@ -88,21 +127,19 @@ public partial class Game : Node2D
 			}
 			else
 			{
-				philosopherNode.Position = data.pos;
+				philosopherNode.Position = philosopherPositions[data.name];
 			}
-			
+
 			PhilosophersContainer.AddChild(philosopherNode);
-			
+
 			// Set each philosopher's bias that will be used when they serve as judge.
 			philosopherNode.Bias = data.bias;
 			_philosopherNodes.Add(philosopherNode);
 		}
-
 	}
 
 	private void StartRound()
 	{
-
 		// --- Designate the Judge ---
 		// Rotate judge by index. In this round, one of the philosophers will only judge.
 		Philosopher currentJudge = _philosopherNodes[_currentJudgeIndex];
@@ -118,13 +155,6 @@ public partial class Game : Node2D
 		// Create a list to track which philosopher plays which card.
 		List<(Philosopher philosopher, Card card)> plays = new List<(Philosopher, Card)>();
 
-		// // Define a basic card deck.
-		// List<Card> basicCards = new List<Card>()
-		// {
-		// 	new Card("Deductive Proof",      "Logic", 8),
-		// 	new Card("Empathy Play",         "Emotion", 6),
-		// 	new Card("Socratic Questioning", "Rebuttal", 7)
-		// };
 
 		List<Card> deck = new List<Card>()
 		{
@@ -145,17 +175,21 @@ public partial class Game : Node2D
 
 			// Paradox Cards
 			new Card("This sentence is false.", "Paradox", 8, "The Liar Paradox"),
-			new Card("If a tree falls in a forest and no one is around to hear it, does it make a sound?", "Paradox", 7, "Philosophical Dilemma"),
+			new Card("If a tree falls in a forest and no one is around to hear it, does it make a sound?", "Paradox", 7,
+				"Philosophical Dilemma"),
 			new Card("Can God create a stone so heavy that He cannot lift it?", "Paradox", 9, "Omnipotence Paradox"),
 
 			// Rebuttal Cards
 			new Card("Extraordinary claims require extraordinary evidence.", "Rebuttal", 8, "Carl Sagan"),
-			new Card("A wise man can learn more from a foolish question than a fool can learn from a wise answer.", "Rebuttal", 7, "Bruce Lee"),
-			new Card("There is no such thing as society, only individuals and families.", "Rebuttal", 6, "Margaret Thatcher"),
+			new Card("A wise man can learn more from a foolish question than a fool can learn from a wise answer.",
+				"Rebuttal", 7, "Bruce Lee"),
+			new Card("There is no such thing as society, only individuals and families.", "Rebuttal", 6,
+				"Margaret Thatcher"),
 
 			// Dialogue Cards
 			new Card("What is justice?", "Dialogue", 9, "Socrates"),
-			new Card("Does a thing become good simply because the gods command it?", "Dialogue", 8, "Euthyphro Dilemma"),
+			new Card("Does a thing become good simply because the gods command it?", "Dialogue", 8,
+				"Euthyphro Dilemma"),
 			new Card("Can you truly know anything with certainty?", "Dialogue", 7, "Epistemological Skepticism")
 		};
 
@@ -193,6 +227,5 @@ public partial class Game : Node2D
 		_currentJudgeIndex = (_currentJudgeIndex + 1) % _philosopherNodes.Count;
 
 		// Future enhancements: update visual scores, add animations, schedule the next round, etc.
-
 	}
 }
