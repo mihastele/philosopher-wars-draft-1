@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" uid="uid://d3ja18y6i6kf" path="res://Game.cs" id="1_wbfu4"]
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" node_paths=PackedStringArray("QuestionLabel", "PhilosophersContainer")]
 script = ExtResource("1_wbfu4")
-
-[node name="PhilosophersContainer" type="Node" parent="."]
+QuestionLabel = NodePath("CanvasLayer/QuestionLabel")
+PhilosophersContainer = NodePath("PhilosophersContainer")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -18,3 +18,5 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="PhilosophersContainer" type="Node2D" parent="."]

@@ -7,19 +7,10 @@ public partial class Philosopher : Node2D
 	// This exported property lets you choose the philosopher in the Godot editor.
 	[Export]
 	public string PhilosopherName { get; set; } = "Nietzsche";
-	
-	//public string Name { get; set; }
-	//public string Specialty { get; set; }
-	//public int Points { get; set; }
-	//public List<Card> Cards { get; set; }
-	
-	//public Philosopher(string name, string specialty)
-	//{
-		//Name = name;
-		//Specialty = specialty;
-		//Points = 0;
-		//Cards = new List<Card>();
-	//}
+
+	// New exported property representing this philosopher's bias (used when they serve as judge)
+	[Export]
+	public string Bias { get; set; } = "Logic";
 
 	public void PlayCard(Card chosenCard)
 	{
