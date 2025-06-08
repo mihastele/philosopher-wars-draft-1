@@ -85,16 +85,43 @@ public partial class Game : Node2D
 // Use constants or configuration for magic numbers
 		const float PHILOSOPHER_SCALE = 0.15f;
 		const float VERTICAL_PADDING = 120f;
-		const float HORIZONTAL_SPACING = 100f;
+		// const float HORIZONTAL_SPACING = 100f;
+
+		// Centering to middle
+
+// 		float philosopherWidth = 1024f * PHILOSOPHER_SCALE;
+// 		float totalWidth = (philosopherCount * philosopherWidth) + ((philosopherCount - 1) * HORIZONTAL_SPACING);
+		
+// 		var philosopherPositions = new Dictionary<string, Vector2>();
+// // Defensive programming: handle zero philosophers case
+// 		if (philosopherCount > 0)
+// 		{
+// 			float startX = (viewportSize.X - totalWidth) / 2f + (philosopherWidth / 2f);
+// 			float yPosition = viewportSize.Y - VERTICAL_PADDING;
+
+			
+	
+// 			for (int i = 0; i < nonSelectedPhilosophers.Count; i++)
+// 			{
+// 				string name = nonSelectedPhilosophers[i].name;
+// 				philosopherPositions[name] = new Vector2(
+// 					startX + (i * (HORIZONTAL_SPACING + philosopherWidth)), 
+// 					yPosition
+// 				);
+// 			}
+// 		}
+
+		//positioning them equally
 
 		float philosopherWidth = 1024f * PHILOSOPHER_SCALE;
-		float totalWidth = (philosopherCount * philosopherWidth) + ((philosopherCount - 1) * HORIZONTAL_SPACING);
+		float totalWidth = viewportSize.X;
+		float HORIZONTAL_SPACING = totalWidth / 3f - philosopherWidth / 2f ;
 		
 		var philosopherPositions = new Dictionary<string, Vector2>();
 // Defensive programming: handle zero philosophers case
 		if (philosopherCount > 0)
 		{
-			float startX = (viewportSize.X - totalWidth) / 2f + (philosopherWidth / 2f);
+			float startX = HORIZONTAL_SPACING; //(philosopherWidth / 2f);
 			float yPosition = viewportSize.Y - VERTICAL_PADDING;
 
 			
@@ -103,7 +130,7 @@ public partial class Game : Node2D
 			{
 				string name = nonSelectedPhilosophers[i].name;
 				philosopherPositions[name] = new Vector2(
-					startX + (i * (HORIZONTAL_SPACING + philosopherWidth)), 
+					startX + (i * (HORIZONTAL_SPACING + philosopherWidth/2f)), 
 					yPosition
 				);
 			}
@@ -117,7 +144,7 @@ public partial class Game : Node2D
 			// Position the selected philosopher in the top right corner
 			if (data.name == GlobalState.SelectedPhilosopher)
 			{
-				philosopherNode.Position = new Vector2(viewportSize.X - 100, VERTICAL_PADDING); // Adjusted for some padding
+				philosopherNode.Position = new Vector2(viewportSize.X - philosopherWidth/2f, VERTICAL_PADDING); // Adjusted for some padding
 			}
 			else
 			{

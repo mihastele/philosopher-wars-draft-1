@@ -15,8 +15,11 @@ anchors_preset = 0
 offset_right = 40.0
 
 [node name="QuestionLabel" type="Label" parent="CanvasLayer"]
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = 44.0
+offset_top = 34.0
+offset_right = 627.0
+offset_bottom = 161.0
+autowrap_mode = 2
 
 [node name="Player" type="Sprite2D" parent="CanvasLayer"]
 
